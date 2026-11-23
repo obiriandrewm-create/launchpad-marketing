@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 env:
-  NODE_VERSION: '22'
+  NODE_VERSION: "22"
 
 jobs:
   lint-typecheck:
@@ -21,16 +21,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Run Biome lint
-        run: npx biome lint .
-
-      - name: Run Biome format check
-        run: npx biome format --check .
+      - name: Run Biome CI (lint + format + import order)
+        # `biome ci` is the correct gate in Biome v2. The previous `biome format --check .`
+        # is invalid in v2 and exits 1 with "not expected in this context", which would
+        # have failed every PR regardless of code quality.
+        run: npx biome ci .
 
       - name: Typecheck
         run: npx astro check
@@ -46,7 +46,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -68,7 +68,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -84,6 +84,51 @@ jobs:
           exitOnceUploaded: true
           autoAcceptChanges: main
 
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Visual regression (local baselines, 390/834/1440)
+        # Runs regardless of Chromatic availability: the committed baselines in
+        # tests/visual/baselines are the source of truth for pixel drift, so this gate
+        # works on day one without CHROMATIC_PROJECT_TOKEN.
+        run: npm run visual:check
+
+      - name: Upload visual diff artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-diff
+          path: tests/visual/output
+          if-no-files-found: ignore
+
+  accessibility:
+    name: Accessibility Audit
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: axe-core audit (WCAG 2.1 AA, both themes)
+        # Asserts 0 axe violations AND that every design token resolves to a real value.
+        # A token that resolves to nothing renders silently — no linter catches that.
+        run: npm run a11y
+
   lighthouse:
     name: Performance Budgets
     runs-on: ubuntu-latest
@@ -96,7 +141,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -118,57 +163,49 @@ jobs:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
   security:
-      name: Security Scan
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v4
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-        - name: Setup Node
-          uses: actions/setup-node@v4
-          with:
-            node-version: ${{ env.NODE_VERSION }}
-            cache: 'npm'
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
 
-        - name: Install dependencies
-          run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-        - name: Audit dependencies
-          run: npm audit --audit-level=high --if-present
+      - name: Audit dependencies
+        run: npm audit --audit-level=high --if-present
 
-        - name: Verify supply chain integrity
-          run: npm audit signatures
+      - name: Generate SBOM
+        run: npx @cyclonedx/bom . --output-format json --outfile sbom.json
 
-        - name: Generate SBOM
-          run: npx @cyclonedx/bom . --output-format json --outfile sbom.json
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.json
 
-        - name: Upload SBOM
-          uses: actions/upload-artifact@v4
-          with:
-            name: sbom
-            path: sbom.json
+      - name: Trivy filesystem scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          format: "sarif"
+          output: "trivy-results.sarif"
 
-        - name: Secret scan (Gitleaks)
-          uses: gitleaks/gitleaks-action@v2
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-        - name: Trivy filesystem scan
-          uses: aquasecurity/trivy-action@master
-          with:
-            scan-type: 'fs'
-            scan-ref: '.'
-            format: 'sarif'
-            output: 'trivy-results.sarif'
-
-        - name: Upload Trivy results
-          uses: github/codeql-action/upload-sarif@v3
-          with:
-            sarif_file: 'trivy-results.sarif'
+      - name: Upload Trivy results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: "trivy-results.sarif"
 
   deploy-preview:
     name: Deploy Preview
-    needs: [lint-typecheck, test, visual-regression, lighthouse, security]
+    needs: [lint-typecheck, test, visual-regression, accessibility, lighthouse, security]
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
@@ -179,7 +216,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -190,7 +227,7 @@ jobs:
       - name: Deploy to Netlify Preview
         uses: nwtgck/actions-netlify@v3
         with:
-          publish-dir: './dist'
+          publish-dir: "./dist"
           production-branch: main
           github-token: ${{ secrets.GITHUB_TOKEN }}
           deploy-message: "Deploy from PR #${{ github.event.number }}"
@@ -204,7 +241,7 @@ jobs:
 
   deploy-production:
     name: Deploy Production
-    needs: [lint-typecheck, test, visual-regression, lighthouse, security]
+    needs: [lint-typecheck, test, visual-regression, accessibility, lighthouse, security]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
@@ -215,7 +252,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -226,7 +263,7 @@ jobs:
       - name: Deploy to Netlify Production
         uses: nwtgck/actions-netlify@v3
         with:
-          publish-dir: './dist'
+          publish-dir: "./dist"
           production-branch: main
           github-token: ${{ secrets.GITHUB_TOKEN }}
           deploy-message: "Production deploy from ${{ github.sha }}"

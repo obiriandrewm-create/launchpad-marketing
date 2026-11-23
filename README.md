@@ -4,20 +4,21 @@
 
 ## Stack
 
-| Layer | Technology |
-|-------|------------|
-| Framework | Astro 5 (hybrid: static + islands) |
-| Database | Neon (serverless Postgres, branching) |
-| Styling | Tailwind v4 (CSS-first, `@theme`) |
-| Linting | Biome |
-| CI/CD | GitHub Actions |
-| Deploy | Netlify (preview + production) |
-| Visual Regression | Chromatic |
-| Performance | Lighthouse CI |
+| Layer             | Technology                            |
+| ----------------- | ------------------------------------- |
+| Framework         | Astro 5 (hybrid: static + islands)    |
+| Database          | Neon (serverless Postgres, branching) |
+| Styling           | Tailwind v4 (CSS-first, `@theme`)     |
+| Linting           | Biome                                 |
+| CI/CD             | GitHub Actions                        |
+| Deploy            | Netlify (preview + production)        |
+| Visual Regression | Chromatic                             |
+| Performance       | Lighthouse CI                         |
 
 ## Security
 
 See [docs/security-gates.md](docs/security-gates.md) for the complete security gate checklist including:
+
 - CSP with per-request nonces
 - COOP/COEP cross-origin isolation
 - Rate limiting & UA blocking at edge
@@ -53,22 +54,22 @@ npm run dev
 
 ### Environment Variables
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `DATABASE_URL` | Yes | Neon connection string (server-only) |
-| `NODE_ENV` | No | `development` \| `production` \| `test` |
+| Variable       | Required | Description                             |
+| -------------- | -------- | --------------------------------------- |
+| `DATABASE_URL` | Yes      | Neon connection string (server-only)    |
+| `NODE_ENV`     | No       | `development` \| `production` \| `test` |
 
 ## Commands
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start dev server at localhost:4321 |
-| `npm run build` | Build for production |
-| `npm run preview` | Preview production build |
-| `npm run lint` | Run Biome lint |
-| `npm run format` | Run Biome format |
-| `npm run check` | Run `astro check` (typecheck) |
-| `npm test` | Run Vitest (when tests exist) |
+| Command           | Description                        |
+| ----------------- | ---------------------------------- |
+| `npm run dev`     | Start dev server at localhost:4321 |
+| `npm run build`   | Build for production               |
+| `npm run preview` | Preview production build           |
+| `npm run lint`    | Run Biome lint                     |
+| `npm run format`  | Run Biome format                   |
+| `npm run check`   | Run `astro check` (typecheck)      |
+| `npm test`        | Run Vitest (when tests exist)      |
 
 ## Project Structure
 

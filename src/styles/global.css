@@ -1,31 +1,82 @@
-@import "tailwindcss";
+/*
+ * Global styles for launchpad-marketing.
+ *
+ * TOKEN SOURCE OF TRUTH: design-tokens.json  (W3C DTCG format)
+ * The values below are NOT hand-written. `npm run tokens:build` regenerates
+ * src/styles/tokens.css from design-tokens.json via Style Dictionary, and the
+ * @theme block here only *references* those custom properties.
+ *
+ * That split is deliberate:
+ *   - design-tokens.json    → the canonical, portable, Figma-importable artifact
+ *   - src/styles/tokens.css → GENERATED, do not hand-edit
+ *   - this @theme block     → maps semantic token names onto Tailwind utilities
+ *                             so `bg-surface`, `text-ink-muted`, `border-strong` work
+ *
+ * Consequence: a design change happens in ONE place (the JSON) and propagates to
+ * Tailwind utilities, the CSS custom properties, and Figma — with no hex literals
+ * scattered through component files.
+ */
+@import 'tailwindcss';
+@import './tokens.css';
 
 @theme {
-  --color-primary: #22c55e;
-  --color-primary-dark: #16a34a;
-  --color-primary-light: #4ade80;
-  --color-secondary: #3b82f6;
-  --color-accent: #f59e0b;
-  --color-surface: #ffffff;
-  --color-surface-dark: #1e1e1e;
-  --color-text: #111827;
-  --color-text-muted: #6b7280;
-  --color-border: #e5e7eb;
-  --color-border-dark: #374151;
+  /*
+   * NOTE: these Tailwind theme keys MUST NOT have the same name as the custom
+   * properties they reference. `--color-canvas: var(--color-canvas)` is a circular
+   * self-reference — the value resolves to nothing, and the utility only appeared to
+   * work because of CSS cascade ordering. Tailwind's theme keys are therefore mapped
+   * to the token roles with a `lp-` prefix, which keeps them distinct from the
+   * generated custom properties in tokens.css.
+   */
 
-  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+  /* Surfaces */
+  --color-lp-canvas: var(--color-canvas);
+  --color-lp-surface: var(--color-surface);
+  --color-lp-surface-raised: var(--color-surface-raised);
 
-  --spacing-unit: 4px;
+  /* Borders */
+  --color-lp-border: var(--color-border);
+  --color-lp-border-strong: var(--color-border-strong);
 
+  /* Text */
+  --color-lp-ink: var(--color-text-primary);
+  --color-lp-ink-secondary: var(--color-text-secondary);
+  --color-lp-ink-muted: var(--color-text-muted);
+
+  /* Action — the ONLY hue that means "actionable" */
+  --color-lp-accent: var(--color-accent);
+  --color-lp-accent-subtle: var(--color-accent-subtle);
+  --color-lp-on-accent: var(--color-text-on-accent);
+
+  /* Evidence status — reserved. Never decorative. */
+  --color-lp-status-pass: var(--color-status-pass);
+  --color-lp-status-manual: var(--color-status-manual);
+  --color-lp-status-fail: var(--color-status-fail);
+  --color-lp-status-stale: var(--color-status-stale);
+  --color-lp-status-expired: var(--color-status-expired);
+
+  /* Type */
+  --font-lp-sans: var(--font-sans);
+  --font-lp-mono: var(--font-mono);
+
+  /* Spacing scale (4px base) */
+  --spacing: 4px;
+
+  /* Radii */
   --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-xl: 14px;
+  --radius-pill: 999px;
 
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  /* Elevation — floating layers only */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.28);
+  --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.36);
+  --shadow-lg: 0 16px 40px -8px rgb(0 0 0 / 0.48);
+
+  /* Motion */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
 }
 
 @layer base {
@@ -36,24 +87,44 @@
   html {
     font-family: var(--font-sans);
     font-size: 16px;
-    line-height: 1.6;
-    color: var(--color-text);
+    line-height: 1.55;
+    color: var(--color-text-primary);
+    background-color: var(--color-canvas);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
   }
 
   body {
-    background-color: var(--color-surface);
+    background-color: var(--color-canvas);
+    color: var(--color-text-primary);
     min-height: 100vh;
   }
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --color-surface: #111827;
-      --color-text: #f9fafb;
-      --color-text-muted: #9ca3af;
-      --color-border: #374151;
-    }
+  /* Visible focus on every interactive element — never remove this. */
+  :focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* Skip link — visible only when focused. */
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: 16px;
+    z-index: 100;
+    padding: 8px 16px;
+    background: var(--color-accent);
+    color: var(--color-text-on-accent);
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: top 120ms cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .skip-link:focus {
+    top: 16px;
   }
 }
 
@@ -63,48 +134,56 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
+    min-height: 40px;
     padding: 0.75rem 1.5rem;
     font-weight: 600;
     border-radius: var(--radius-md);
-    transition: all 0.2s ease;
+    transition:
+      background-color 120ms cubic-bezier(0.2, 0, 0, 1),
+      border-color 120ms cubic-bezier(0.2, 0, 0, 1),
+      color 120ms cubic-bezier(0.2, 0, 0, 1),
+      transform 120ms cubic-bezier(0.2, 0, 0, 1);
     cursor: pointer;
-    border: none;
+    border: 1px solid transparent;
     text-decoration: none;
   }
 
+  .btn:active {
+    transform: scale(0.96);
+  }
+
   .btn-primary {
-    background-color: var(--color-primary);
-    color: white;
+    background-color: var(--color-accent);
+    color: var(--color-text-on-accent);
   }
 
   .btn-primary:hover {
-    background-color: var(--color-primary-dark);
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
+    background-color: var(--color-accent-hover);
   }
 
   .btn-secondary {
     background-color: transparent;
-    color: var(--color-primary);
-    border: 2px solid var(--color-primary);
+    color: var(--color-text-primary);
+    border-color: var(--color-border-strong);
   }
 
   .btn-secondary:hover {
-    background-color: var(--color-primary);
-    color: white;
+    background-color: var(--color-surface-raised);
+    border-color: var(--color-accent);
   }
 
   .card {
-    background-color: var(--color-surface);
+    background-color: var(--color-surface-raised);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     padding: 1.5rem;
-    transition: all 0.2s ease;
+    transition:
+      border-color 120ms cubic-bezier(0.2, 0, 0, 1),
+      background-color 120ms cubic-bezier(0.2, 0, 0, 1);
   }
 
   .card:hover {
-    border-color: var(--color-primary);
-    box-shadow: var(--shadow-lg);
+    border-color: var(--color-border-strong);
   }
 
   .container {
@@ -120,21 +199,52 @@
     text-wrap: balance;
   }
 
+  /*
+   * Motion contract.
+   * Animation must CLARIFY a state change, never provide atmosphere.
+   * No scroll-triggered reveals, no parallax, no animated gradients.
+   * All durations collapse to 0.01ms under prefers-reduced-motion.
+   */
   .animate-fade-in {
-    animation: fadeIn 0.5s ease-out;
+    animation: fade-in 180ms cubic-bezier(0.2, 0, 0, 1) both;
   }
 
   .animate-slide-up {
-    animation: slideUp 0.5s ease-out;
+    animation: slide-up 180ms cubic-bezier(0.2, 0, 0, 1) both;
   }
 
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }

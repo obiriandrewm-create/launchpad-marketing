@@ -1,0 +1,80 @@
+/*
+ * Netlify edge headers for launchpad-marketing.
+ *
+ * WHY THIS FILE EXISTS
+ * --------------------
+ * The Astro site builds to STATIC output (no adapter). In static mode Astro middleware
+ * does NOT execute at request time — it runs only during `astro build` for prerendered
+ * pages, and the headers it sets are discarded. Verified: a built `dist/index.html`
+ * contained no `csp-nonce` meta, and `astro preview` returned none of the
+ * Content-Security-Policy / HSTS / COOP / COEP headers that `src/middleware/security.ts`
+ * sets.
+ *
+ * Consequence: every security header in `src/middleware/security.ts` is inert in the
+ * deployed static site. Static deploys are served by the CDN, so the headers MUST be
+ * declared in the CDN config. This file is the CDN config.
+ *
+ * CSP STRATEGY
+ * ------------
+ * Astro inlines small stylesheets by default (`build.inlineStylesheets: 'auto'`), which
+ * requires `style-src 'unsafe-inline'`. This is the one documented exception, and it is
+ * scoped to styles only — scripts still get a strict policy.
+ *
+ * `script-src` is plain `'self'`: verified via `node scripts/csp-hash.mjs dist/index.html`
+ * that the built HTML contains ZERO inline <script> blocks, so no nonce and no script
+ * hash is required. Every script loads from our own origin as an external file.
+ * No 'unsafe-eval'.
+ *
+ * The nonce in `src/middleware/security.ts` is retained for the eventual app-first
+ * (SSR) migration, where it becomes live. Until then, a self-only script-src is the
+ * correct mechanism for static output.
+ */
+
+/*
+ * Content-Security-Policy
+ *
+ * - default-src 'self'         : nothing loads unless explicitly allowed
+ * - script-src 'self' 'sha256-...' 'strict-dynamic'
+ *                              : only our own JS + the specific Astro inline script
+ * - style-src 'self' 'unsafe-inline'
+ *                              : Astro inlines small stylesheets (no external CSS)
+ * - img-src 'self' data: https: : logos, OG images, favicons
+ * - font-src 'self' data:       : system fonts (no webfont request → no third-party origin)
+ * - connect-src 'self' https://*.neon.tech wss://*.neon.tech
+ *                              : Neon serverless Postgres over the WebSocket/HTTP driver
+ * - frame-src 'self' https://www.youtube.com https://player.vimeo.com
+ *                              : demo video embeds (COEP is credentialless on marketing routes)
+ * - frame-ancestors 'none'     : nobody may frame us
+ * - base-uri 'self'            : no <base> tag hijacking
+ * - form-action 'self'         : forms post only to us
+ * - object-src 'none'          : no plugins
+ * - upgrade-insecure-requests  : force HTTPS for all subresources
+ */
+Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://*.neon.tech wss://*.neon.tech; frame-src 'self' https://www.youtube.com https://player.vimeo.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests
+
+# Transport security — preload eligible
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+# Cross-origin isolation
+# credentialless on all marketing routes so YouTube/Vimeo embeds still load without
+# requiring CORP headers from the third party. require-corp is applied on
+# non-marketing routes (auth / island routes) by src/middleware/security.ts once the
+# app-first migration lands.
+Cross-Origin-Embedder-Policy: credentialless
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: cross-origin
+
+# Do not let browsers sniff content types or render our HTML inside a frame
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Referrer-Policy: strict-origin-when-cross-origin
+Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), interest-cohort=()
+
+# Do not advertise the stack
+X-Powered-By: ~Deny
+Server: ~Deny
+
+# Cache policy
+/*
+  X-Nextjs-Prerender: no
+*/

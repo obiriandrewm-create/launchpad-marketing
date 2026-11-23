@@ -1,5 +1,5 @@
-import { neon } from '@neondatabase/serverless';
 import type { NeonQueryFunction } from '@neondatabase/serverless';
+import { neon } from '@neondatabase/serverless';
 
 let sql: NeonQueryFunction<boolean, boolean> | null = null;
 
@@ -54,7 +54,13 @@ export const queries = {
   },
 
   // Projects
-  createProject: (teamId: string, name: string, repoUrl: string, demoUrl: string, description: string) => {
+  createProject: (
+    teamId: string,
+    name: string,
+    repoUrl: string,
+    demoUrl: string,
+    description: string
+  ) => {
     const client = getSql();
     return client`INSERT INTO projects (team_id, name, repo_url, demo_url, description) VALUES (${teamId}, ${name}, ${repoUrl}, ${demoUrl}, ${description}) RETURNING *`;
   },
@@ -65,7 +71,13 @@ export const queries = {
   },
 
   // Judging
-  createScore: (projectId: string, judgeId: string, criteriaId: string, score: number, feedback: string) => {
+  createScore: (
+    projectId: string,
+    judgeId: string,
+    criteriaId: string,
+    score: number,
+    feedback: string
+  ) => {
     const client = getSql();
     return client`INSERT INTO scores (project_id, judge_id, criteria_id, score, feedback) VALUES (${projectId}, ${judgeId}, ${criteriaId}, ${score}, ${feedback}) RETURNING *`;
   },

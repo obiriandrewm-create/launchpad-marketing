@@ -7,28 +7,38 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "npm run tokens:build && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "lint": "biome lint .",
+    "tokens:build": "node scripts/build-tokens.mjs",
+    "tokens:figma": "node scripts/build-tokens.mjs && echo 'Figma tokens -> dist/_tokens/tokens.json'",
+    "csp:hash": "node scripts/csp-hash.mjs dist/index.html",
+    "lint": "biome ci .",
     "format": "biome format --write .",
-    "format:check": "biome format --check .",
+    "format:check": "biome ci .",
     "check": "astro check",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "visual:baseline": "node scripts/capture-baselines.mjs",
+    "visual:check": "node scripts/capture-baselines.mjs --check",
+    "a11y": "node scripts/a11y-audit.mjs"
   },
   "dependencies": {
-      "@biomejs/biome": "^2.6.8",
-      "@neondatabase/serverless": "^1.2.1",
-      "@tailwindcss/vite": "^4.3.5",
-      "astro": "^7.4.13",
-      "tailwindcss": "^4.0.0"
-    },
+    "@neondatabase/serverless": "^1.2.1",
+    "@tailwindcss/vite": "^4.3.5",
+    "astro": "^7.4.13",
+    "tailwindcss": "^4.0.0"
+  },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
+    "@biomejs/biome": "^2.6.8",
     "@tailwindcss/postcss": "^4.3.5",
     "@types/node": "^26.6.6",
     "@vitest/coverage-v8": "^5.1.1",
+    "axe-core": "^4.9.1",
+    "playwright": "^1.65.1",
+    "pngjs": "^7.0.0",
+    "style-dictionary": "^5.8.0",
     "typescript": "^6.0.3",
     "vitest": "^5.1.1"
   }
