@@ -2,29 +2,29 @@
 interface Props {
   title: string;
   description?: string;
-  children: any;
+  children: unknown;
 }
-const { title, description = 'Launchpad - Build. Ship. Win.', children } = Astro.props;
-const cspNonce = Astro.locals.cspNonce;
+const { title: _title, description: _description = 'Launchpad - Build. Ship. Win.', children: _children } = Astro.props;
+const _cspNonce = Astro.locals.cspNonce;
 ---
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={description} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <title>{title}</title>
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
-    {cspNonce && <meta name="csp-nonce" content={cspNonce} />}
-  </head>
-  <body class="animate-fade-in">
-    {children}
-  </body>
-</html>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta name="description" content={_description} />
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+      <title>{_title}</title>
+      <meta property="og:title" content={_title} />
+      <meta property="og:description" content={_description} />
+      <meta property="og:type" content="website" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={_title} />
+      <meta name="twitter:description" content={_description} />
+      {_cspNonce && <meta name="csp-nonce" content={_cspNonce} />}
+    </head>
+    <body class="animate-fade-in">
+      {_children}
+    </body>
+  </html>
