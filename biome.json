@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.6.8/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -7,11 +7,13 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": [
-      "node_modules/**",
-      "dist/**",
-      ".astro/**",
-      "coverage/**"
+    "includes": [
+      "**",
+      "!**/node_modules",
+      "!**/dist",
+      "!**/.astro",
+      "!**/coverage",
+      "!**/src/styles/tokens.css"
     ]
   },
   "formatter": {
@@ -23,30 +25,74 @@
     "lineWidth": 100,
     "attributePosition": "auto"
   },
-  "organizeImports": {
-    "enabled": true
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
   },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "correctness": {
         "noUnusedVariables": "error",
         "useExhaustiveDependencies": "warn"
       },
       "suspicious": {
         "noExplicitAny": "warn",
-        "noConsoleLog": "warn"
+        "noConsole": { "level": "warn", "options": { "allow": ["log"] } }
       },
       "style": {
         "useConst": "error",
         "noNonNullAssertion": "warn"
       },
       "security": {
-        "noDangerousFunction": "error"
+        "noGlobalEval": "error",
+        "noScriptUrl": "error"
       }
     }
   },
+  "overrides": [
+    {
+      "includes": ["**/*.astro"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noUnusedVariables": "off"
+          }
+        }
+      },
+      "assist": {
+        "actions": {
+          "source": {
+            "organizeImports": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["scripts/**"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noConsole": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/styles/**"],
+      "linter": {
+        "rules": {
+          "complexity": {
+            "noImportantStyles": "off"
+          }
+        }
+      }
+    }
+  ],
   "javascript": {
     "formatter": {
       "quoteStyle": "single",
@@ -61,6 +107,9 @@
     }
   },
   "css": {
+    "parser": {
+      "tailwindDirectives": true
+    },
     "formatter": {
       "quoteStyle": "single"
     }

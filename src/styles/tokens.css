@@ -1,0 +1,223 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --primitive-color-ink-50: #e9eef5;
+  --primitive-color-ink-300: #a9b6c6;
+  --primitive-color-ink-500: #7c8ca1;
+  --primitive-color-ink-700: #27313f;
+  --primitive-color-ink-850: #1a2330;
+  --primitive-color-ink-900: #121821;
+  --primitive-color-ink-950: #0a0e14;
+  --primitive-color-paper-0: #ffffff;
+  --primitive-color-paper-50: #f6f8fa;
+  --primitive-color-paper-100: #e8ecf1;
+  --primitive-color-paper-300: #d9e0e8;
+  --primitive-color-paper-500: #a8b3c2;
+  --primitive-color-paper-700: #64748b;
+  --primitive-color-paper-900: #48566a;
+  --primitive-color-paper-950: #0b111a;
+  --primitive-color-lime-300: #d9f99d;
+  --primitive-color-lime-400: #a3e635;
+  --primitive-color-lime-500: #84cc16;
+  --primitive-color-lime-700: #4d7c0f;
+  --primitive-color-lime-900: #365314;
+  --primitive-color-status-pass: #34d399;
+  --primitive-color-status-pass-light: #15803d;
+  --primitive-color-status-manual: #7dd3fc;
+  --primitive-color-status-manual-light: #0369a1;
+  --primitive-color-status-fail: #f87171;
+  --primitive-color-status-fail-light: #b91c1c;
+  --primitive-color-status-stale: #fbbf24;
+  --primitive-color-status-stale-light: #b45309;
+  --primitive-color-status-expired: #94a3b8;
+  --primitive-color-status-expired-light: #64748b;
+  --primitive-space-0: 0px;
+  --primitive-space-1: 4px;
+  --primitive-space-2: 8px;
+  --primitive-space-3: 12px;
+  --primitive-space-4: 16px;
+  --primitive-space-5: 24px;
+  --primitive-space-6: 32px;
+  --primitive-space-7: 48px;
+  --primitive-space-8: 64px;
+  --primitive-space-9: 96px;
+  --primitive-radius-xs: 4px;
+  --primitive-radius-sm: 6px;
+  --primitive-radius-md: 10px;
+  --primitive-radius-lg: 14px;
+  --primitive-radius-pill: 999px;
+  --primitive-font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI Variable", "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --primitive-font-mono: ui-monospace, "Cascadia Code", "JetBrains Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --primitive-font-size-xs: 12px;
+  --primitive-font-size-sm: 14px;
+  --primitive-font-size-md: 16px;
+  --primitive-font-size-lg: 18px;
+  --primitive-font-size-xl: 22px;
+  --primitive-font-size-2xl: 28px;
+  --primitive-font-size-3xl: 36px;
+  --primitive-font-size-4xl: 48px;
+  --primitive-font-weight-regular: 400;
+  --primitive-font-weight-medium: 500;
+  --primitive-font-weight-semibold: 600;
+  --primitive-font-weight-bold: 700;
+  --primitive-line-height-tight: 1.2;
+  --primitive-line-height-snug: 1.35;
+  --primitive-line-height-normal: 1.55;
+  --primitive-duration-fast: 0.12s;
+  --primitive-duration-base: 0.18s;
+  --primitive-duration-slow: 0.28s;
+  --primitive-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --primitive-easing-exit: cubic-bezier(0.4, 0, 1, 1);
+  --primitive-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.28);
+  --primitive-shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.36);
+  --primitive-shadow-lg: 0 16px 40px -8px rgb(0 0 0 / 0.48);
+  --semantic-color-canvas-dark: #0a0e14;
+  --semantic-color-canvas-light: #ffffff;
+  --semantic-color-surface-dark: #121821;
+  --semantic-color-surface-light: #f6f8fa;
+  --semantic-color-surface-raised-dark: #1a2330;
+  --semantic-color-surface-raised-light: #ffffff;
+  --semantic-color-border-dark: #27313f;
+  --semantic-color-border-light: #d9e0e8;
+  --semantic-color-border-strong-dark: #7c8ca1;
+  --semantic-color-border-strong-light: #64748b;
+  --semantic-color-text-primary-dark: #e9eef5;
+  --semantic-color-text-primary-light: #0b111a;
+  --semantic-color-text-secondary-dark: #a9b6c6;
+  --semantic-color-text-secondary-light: #48566a;
+  --semantic-color-text-muted-dark: #7c8ca1;
+  --semantic-color-text-muted-light: #64748b;
+  --semantic-color-text-on-accent-dark: #0a0e14;
+  --semantic-color-text-on-accent-light: #ffffff;
+  --semantic-color-accent-dark: #a3e635;
+  --semantic-color-accent-light: #4d7c0f;
+  --semantic-color-accent-subtle-dark: #365314;
+  --semantic-color-accent-subtle-light: #d9f99d;
+  --semantic-color-focus-ring-dark: #a3e635;
+  --semantic-color-focus-ring-light: #0b111a;
+  --semantic-color-status-pass-dark: #34d399;
+  --semantic-color-status-pass-light: #15803d;
+  --semantic-color-status-manual-dark: #7dd3fc;
+  --semantic-color-status-manual-light: #0369a1;
+  --semantic-color-status-fail-dark: #f87171;
+  --semantic-color-status-fail-light: #b91c1c;
+  --semantic-color-status-stale-dark: #fbbf24;
+  --semantic-color-status-stale-light: #b45309;
+  --semantic-color-status-expired-dark: #94a3b8;
+  --semantic-color-status-expired-light: #64748b;
+  --semantic-font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI Variable", "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --semantic-font-mono: ui-monospace, "Cascadia Code", "JetBrains Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --semantic-space-none: 0px;
+  --semantic-space-xs: 4px;
+  --semantic-space-sm: 8px;
+  --semantic-space-md: 16px;
+  --semantic-space-lg: 32px;
+  --semantic-space-xl: 64px;
+  --semantic-space-2xl: 96px;
+  --semantic-radius-sm: 4px;
+  --semantic-radius-md: 6px;
+  --semantic-radius-lg: 10px;
+  --semantic-radius-pill: 999px;
+  --semantic-motion-fast: 0.12s;
+  --semantic-motion-base: 0.18s;
+  --semantic-motion-slow: 0.28s;
+  --semantic-motion-easing: cubic-bezier(0.2, 0, 0, 1);
+  --semantic-motion-press-scale: 0.96;
+  --semantic-focus-ring-width: 2px;
+  --semantic-focus-ring-offset: 2px;
+  --component-button-primary-background: #a3e635;
+  --component-button-primary-text: #0a0e14;
+  --component-button-primary-radius: 6px;
+  --component-button-primary-padding-x: 16px;
+  --component-button-primary-padding-y: 8px;
+  --component-button-secondary-background: #1a2330;
+  --component-button-secondary-text: #e9eef5;
+  --component-button-secondary-border: #7c8ca1;
+  --component-button-ghost-background: rgba(0, 0, 0, 0);
+  --component-button-ghost-text: #a9b6c6;
+  --component-button-danger-background: #f87171;
+  --component-button-danger-text: #0a0e14;
+  --component-button-min-height: 40px;
+  --component-status-badge-pass: #34d399;
+  --component-status-badge-manual: #7dd3fc;
+  --component-status-badge-fail: #f87171;
+  --component-status-badge-stale: #fbbf24;
+  --component-status-badge-expired: #94a3b8;
+  --component-status-badge-not-checked: #7c8ca1;
+  --component-status-badge-radius: 999px;
+  --component-surface-raised: #1a2330;
+  --component-surface-border: #27313f;
+  --component-surface-radius: 10px;
+  --component-code-block-background: #121821;
+  --component-code-block-text: #a9b6c6;
+  --component-code-block-radius: 4px;
+  --component-code-block-font: ui-monospace, "Cascadia Code", "JetBrains Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --component-callout-info: #7dd3fc;
+  --component-callout-success: #34d399;
+  --component-callout-warning: #fbbf24;
+  --component-callout-danger: #f87171;
+  --component-meter-track: #27313f;
+  --component-meter-fill: #a3e635;
+  --component-meter-height: 8px;
+  --component-input-background: #121821;
+  --component-input-text: #e9eef5;
+  --component-input-border: #7c8ca1;
+  --component-input-radius: 6px;
+  --component-input-min-height: 40px;
+}
+
+/* ============================================================
+   RESOLVED SEMANTIC LAYER (dark is the default)
+   These are the names components consume. Generated from
+   design-tokens.json — do not hand-edit.
+   ============================================================ */
+:root {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI Variable", "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "JetBrains Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --color-canvas: #0A0E14;
+  --color-surface: #121821;
+  --color-surface-raised: #1A2330;
+  --color-border: #27313F;
+  --color-border-strong: #7C8CA1;
+  --color-text-primary: #E9EEF5;
+  --color-text-secondary: #A9B6C6;
+  --color-text-muted: #7C8CA1;
+  --color-text-on-accent: #0A0E14;
+  --color-accent: #A3E635;
+  --color-accent-subtle: #365314;
+  --color-focus-ring: #A3E635;
+  --color-status-pass: #34D399;
+  --color-status-manual: #7DD3FC;
+  --color-status-fail: #F87171;
+  --color-status-stale: #FBBF24;
+  --color-status-expired: #94A3B8;
+}
+
+/* ============================================================
+   LIGHT THEME
+   Independently chosen values, not an algorithmic inversion.
+   Generated from design-tokens.json — do not hand-edit.
+   ============================================================ */
+@media (prefers-color-scheme: light) {
+  :root {
+  --color-canvas: #FFFFFF;
+  --color-surface: #F6F8FA;
+  --color-surface-raised: #FFFFFF;
+  --color-border: #D9E0E8;
+  --color-border-strong: #64748B;
+  --color-text-primary: #0B111A;
+  --color-text-secondary: #48566A;
+  --color-text-muted: #64748B;
+  --color-text-on-accent: #FFFFFF;
+  --color-accent: #4D7C0F;
+  --color-accent-subtle: #D9F99D;
+  --color-focus-ring: #0B111A;
+  --color-status-pass: #15803D;
+  --color-status-manual: #0369A1;
+  --color-status-fail: #B91C1C;
+  --color-status-stale: #B45309;
+  --color-status-expired: #64748B;
+  }
+}

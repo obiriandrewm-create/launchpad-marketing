@@ -35,6 +35,11 @@ pnpm-debug.log*
 coverage/
 .nyc_output/
 
+# Visual regression
+# tests/visual/baselines/ is COMMITTED — it is the source of truth for pixel drift.
+# tests/visual/output/ is regenerated on every run and is not committed.
+tests/visual/output/
+
 # Misc
 *.tgz
 .cache/
