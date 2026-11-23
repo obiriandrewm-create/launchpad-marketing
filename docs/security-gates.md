@@ -144,6 +144,8 @@ object-src 'none';
 | Visual Regression | Chromatic | 0 pixel diffs (static), ±2% (islands) | Block PR |
 | Performance | Lighthouse CI | LCP ≤2.5s, INP ≤200ms, CLS ≤0.1 | Warn PR |
 | Security Audit | `npm audit` | 0 critical, 0 high (unreviewed) | Block PR |
+| Supply Chain Integrity | `npm audit signatures` | All packages verified | Block PR |
+| Secret Scan | Gitleaks | 0 findings | Block PR |
 | SBOM | `syft` | Generated per PR | Artifact |
 | Trivy Scan | Trivy | 0 critical, 0 high | Block PR |
 | Accessibility | axe-core (in Chromatic) | 0 violations (WCAG 2.1 AA) | Block PR |
